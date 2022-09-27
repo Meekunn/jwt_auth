@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	FormControl,
 	FormLabel,
@@ -15,6 +16,7 @@ import {
 	FormErrorMessage,
 	FormHelperText,
 } from "@chakra-ui/react"
+import axios from "axios"
 import { useRef, useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
@@ -50,12 +52,18 @@ const SignUpForm = () => {
 		inputRef.current?.focus()
 	}, [])
 
-	const onSubmit = handleSubmit((data) => {
+	const onSubmit = handleSubmit(async (values) => {
 		setLoading(true)
 		const currentForm = formRef.current
 		if (currentForm == null) return
-
-		console.log(data)
+		try {
+			const { data } = await axios.post("http://localhost:5000/signup", {
+				...values,
+			})
+			console.log(data)
+		} catch (error) {
+			console.log(error)
+		}
 		setLoading(false)
 		navigate("/")
 		reset()
