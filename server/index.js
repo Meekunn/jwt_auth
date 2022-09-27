@@ -1,41 +1,43 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const authRoutes = require("./Routes/AuthRoutes");
+const authRoutes = require("./routes/authRoutes");
 const cookieParser = require("cookie-parser");
 
 const app = express();
-const uri =
-	"mongodb+srv://Ayomikun:Ayomikun@jwt-auth.902d3wo.mongodb.net/?retryWrites=true&w=majority;";
 
-app.listen(5000, (error) => {
-	if (error) {
-		console.log(error);
-	} else {
-		console.log("Listening to PORT 5000");
-	}
+// middlewares
+app.use(express.json());
+app.use((req, res, next) => {
+	console.log(req.path, req.method);
+	next();
 });
 
+// routes
+app.use("/api/auth", authRoutes);
+
+// mongodb
 mongoose
-	.connect(uri, {
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-	})
+	.connect(process.env.MONGODB_URI)
 	.then(() => {
-		console.log("Connection Successful");
+		// listen for requests
+		app.listen(process.env.PORT, () => {
+			console.log(
+				"connected to db & listening on port",
+				process.env.PORT
+			);
+		});
 	})
 	.catch((error) => {
 		console.log(error);
 	});
-
-app.use(
-	cors({
-		origin: ["http://localhost:3000"],
-		method: ["GET, POST"],
-		credentials: true,
-	})
-);
+// app.use(
+// 	cors({
+// 		origin: ["http://localhost:3000"],
+// 		method: ["GET, POST"],
+// 		credentials: true,
+// 	})
+// );
 
 app.use(cookieParser());
-app.use(express.json());
-app.use("/", authRoutes);
