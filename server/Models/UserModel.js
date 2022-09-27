@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
 	},
 });
 
-// static sign up method
+// static auth method
 userSchema.statics.signup = async function (username, email, password) {
 	//validation
 	if (!email || !password || !username) {
@@ -43,7 +43,7 @@ userSchema.statics.signup = async function (username, email, password) {
 	}
 
 	//generate salt
-	const salt = await bcrypt.genSalt(15);
+	const salt = await bcrypt.genSalt(12);
 	//hash with password
 	const hash = await bcrypt.hash(password, salt);
 
@@ -51,6 +51,26 @@ userSchema.statics.signup = async function (username, email, password) {
 	const user = await this.create({ username, email, password: hash });
 
 	return user;
+};
+
+userSchema.statics.signin = async function (email, password) {
+	if (!email || !password) {
+		throw Error("All Fields are Required");
+	}
+
+	const userExists = await this.findOne({ email });
+
+	if (!userExists) {
+		throw Error("This email isn't registered");
+	}
+
+	const match = await bcrypt.compare(password, userExists.password);
+
+	if (!match) {
+		throw Error("Incorrect password");
+	}
+
+	return userExists;
 };
 
 module.exports = mongoose.model("User", userSchema);
