@@ -16,7 +16,6 @@ import {
 	FormErrorMessage,
 	FormHelperText,
 } from "@chakra-ui/react"
-import axios from "axios"
 import { useRef, useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
@@ -24,10 +23,8 @@ import { MdEmail, MdVisibility, MdVisibilityOff } from "react-icons/md"
 import { RiLockPasswordFill } from "react-icons/ri"
 import { FaUser } from "react-icons/fa"
 import { formStyle } from "./style"
-
-const USERNAME_REGEX = /^[A-Z][a-z_]{3,23}$/
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
-const USEREMAIL_REGEX = /^[A-Za-z0-9_\-.]{4,}[@][a-z]+[.][a-z]{2,3}$/
+import { useSignup } from "../hooks/useSignUp"
+import { PASSWORD_REGEX, USEREMAIL_REGEX, USERNAME_REGEX } from "../regex"
 
 const SignUpForm = () => {
 	const bg = useColorModeValue("gray.50", "#0a1a30")
@@ -44,29 +41,24 @@ const SignUpForm = () => {
 		reset,
 	} = useForm<IAuthValue>()
 
+	const { signup, isLoading } = useSignup()
 	const [show, setShow] = useState(false)
 	const [showConfirm, setShowConfirm] = useState(false)
-	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
 		inputRef.current?.focus()
 	}, [])
 
-	const onSubmit = handleSubmit(async (values) => {
-		setLoading(true)
+	const onSubmit = handleSubmit(async (data) => {
 		const currentForm = formRef.current
 		if (currentForm == null) return
-		try {
-			const { data } = await axios.post("http://localhost:5000/signup", {
-				...values,
-			})
-			console.log(data)
-		} catch (error) {
-			console.log(error)
-		}
-		setLoading(false)
-		navigate("/")
+		await signup(data.username, data.email, data.password)
 		reset()
+		setTimeout(() => {
+			navigate("/signin")
+		}, 3000)
+
+		// return () => clearTimeout(timer)
 	})
 
 	return (
@@ -132,7 +124,7 @@ const SignUpForm = () => {
 							{errors.email && errors?.email.message}
 						</FormErrorMessage>
 					) : (
-						<FormHelperText opacity={0}>toweringheights@mail.com</FormHelperText>
+						<FormHelperText opacity={0}>johndoe@email.com</FormHelperText>
 					)}
 				</FormControl>
 				<FormControl isInvalid={!!errors.password}>
@@ -153,7 +145,6 @@ const SignUpForm = () => {
 							})}
 							type={show ? "text" : "password"}
 							placeholder="********"
-							autoComplete="off"
 						/>
 						<InputRightElement width="4.5rem">
 							<IconButton
@@ -226,7 +217,7 @@ const SignUpForm = () => {
 						bg: "blue.500",
 					}}
 					w="100%"
-					isLoading={loading}
+					isLoading={isLoading}
 					loadingText="Signing Up"
 					type="submit"
 				>

@@ -1,6 +1,11 @@
 interface IAuthValue {
-	username?: string
+	username: string
 	email: string
 	password: string
-	confirm?: string
+	confirm: string
+}
+
+interface ILoginValue {
+	email: string
+	password: string
 }

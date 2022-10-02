@@ -1,11 +1,18 @@
 import HomeIllustration from "../assets/Humaaans.png"
-import { Image, Stack } from "@chakra-ui/react"
+import { Image, HStack, VStack, Button } from "@chakra-ui/react"
+import { useNavigate } from "react-router-dom"
 
 const HomePage = () => {
+	const navigate = useNavigate()
+
 	return (
-		<Stack>
+		<HStack>
 			<Image src={HomeIllustration} w={"500px"} h={"500px"} />
-		</Stack>
+			<VStack>
+				<Button onClick={() => navigate("/signin")}>Sign In</Button>
+				<Button onClick={() => navigate("/signup")}>Sign Up</Button>
+			</VStack>
+		</HStack>
 	)
 }
 
