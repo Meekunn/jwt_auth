@@ -3,11 +3,6 @@ const bcrypt = require("bcrypt");
 const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
-	username: {
-		type: String,
-		required: true,
-		unique: true,
-	},
 	email: {
 		type: String,
 		required: true,
@@ -20,9 +15,9 @@ const userSchema = new mongoose.Schema({
 });
 
 // static auth method
-userSchema.statics.signup = async function (username, email, password) {
+userSchema.statics.signup = async function (email, password) {
 	//validation
-	if (!email || !password || !username) {
+	if (!email || !password) {
 		throw Error("All Fields are Required");
 	}
 	if (!validator.isEmail(email)) {
@@ -37,18 +32,13 @@ userSchema.statics.signup = async function (username, email, password) {
 		throw Error("Email already exists");
 	}
 
-	const usernameExists = await this.findOne({ username });
-	if (usernameExists) {
-		throw Error("Username already exists");
-	}
-
 	//generate salt
 	const salt = await bcrypt.genSalt(12);
 	//hash with password
 	const hash = await bcrypt.hash(password, salt);
 
 	//store password and email
-	const user = await this.create({ username, email, password: hash });
+	const user = await this.create({ email, password: hash });
 
 	return user;
 };
