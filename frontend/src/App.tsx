@@ -1,6 +1,7 @@
 import { Box, Grid } from "@chakra-ui/react"
 import { Route, Routes } from "react-router-dom"
 import Navbar from "./components/Navbar"
+import ProtectedRoutes from "./HOC/ProtectedRoutes"
 import Dashboard from "./pages/Dashboard"
 import HomePage from "./pages/HomePage"
 import Login from "./pages/Login"
@@ -15,7 +16,14 @@ const App = () => {
 					<Route path="/" element={<HomePage />} />
 					<Route path="/signin" element={<Login />} />
 					<Route path="/signup" element={<SignUp />} />
-					<Route path="/dashboard" element={<Dashboard />} />
+					<Route
+						path="/dashboard"
+						element={
+							<ProtectedRoutes>
+								<Dashboard />
+							</ProtectedRoutes>
+						}
+					/>
 				</Routes>
 			</Grid>
 		</Box>
