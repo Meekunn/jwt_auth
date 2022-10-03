@@ -8,10 +8,6 @@ const HomePage = () => {
 	return (
 		<HStack>
 			<Image src={HomeIllustration} w={"500px"} h={"500px"} />
-			<VStack>
-				<Button onClick={() => navigate("/signin")}>Sign In</Button>
-				<Button onClick={() => navigate("/signup")}>Sign Up</Button>
-			</VStack>
 		</HStack>
 	)
 }

@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createContext, useReducer } from "react"
+import { createContext, useReducer, useEffect } from "react"
 
 interface IContextProvider {
 	children: React.ReactNode
@@ -23,6 +23,14 @@ export const AuthContextProvider = ({ children }: IContextProvider) => {
 	const [state, dispatch] = useReducer(authReducer, {
 		user: null,
 	})
+
+	useEffect(() => {
+		const check = localStorage.getItem("user")
+		if (check != null) {
+			const user = JSON.parse(check)
+			dispatch({ type: "SIGNIN", payload: user })
+		}
+	}, [])
 
 	console.log("Auth: ", state)
 
