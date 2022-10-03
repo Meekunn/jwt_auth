@@ -21,10 +21,9 @@ import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { MdEmail, MdVisibility, MdVisibilityOff } from "react-icons/md"
 import { RiLockPasswordFill } from "react-icons/ri"
-import { FaUser } from "react-icons/fa"
 import { formStyle } from "./style"
 import { useSignup } from "../hooks/useSignUp"
-import { PASSWORD_REGEX, USEREMAIL_REGEX, USERNAME_REGEX } from "../regex"
+import { PASSWORD_REGEX, USEREMAIL_REGEX } from "../regex"
 
 const SignUpForm = () => {
 	const bg = useColorModeValue("gray.50", "#0a1a30")
@@ -52,13 +51,11 @@ const SignUpForm = () => {
 	const onSubmit = handleSubmit(async (data) => {
 		const currentForm = formRef.current
 		if (currentForm == null) return
-		await signup(data.username, data.email, data.password)
+		await signup(data.email, data.password)
 		reset()
 		setTimeout(() => {
 			navigate("/signin")
-		}, 3000)
-
-		// return () => clearTimeout(timer)
+		}, 2000)
 	})
 
 	return (
@@ -72,33 +69,6 @@ const SignUpForm = () => {
 			borderColor={borderColor}
 		>
 			<form ref={formRef} onSubmit={onSubmit} style={formStyle}>
-				<FormControl isInvalid={!!errors.username}>
-					<FormLabel>Username</FormLabel>
-					<InputGroup>
-						<InputLeftElement pointerEvents="none">
-							<FaUser color="gray.300" />
-						</InputLeftElement>
-						<Input
-							{...register("username", {
-								required: "Username is Required",
-								pattern: {
-									value: USERNAME_REGEX,
-									message:
-										"4 to 24 characters, start with an uppercase, and only letters and underscores allowed.",
-								},
-							})}
-							type="text"
-							placeholder="Jane"
-						/>
-					</InputGroup>
-					{errors.username ? (
-						<FormErrorMessage fontSize="xs" textAlign="left">
-							{errors.username && errors?.username.message}
-						</FormErrorMessage>
-					) : (
-						<FormHelperText opacity={0}>Username</FormHelperText>
-					)}
-				</FormControl>
 				<FormControl isInvalid={!!errors.email}>
 					<FormLabel>Email</FormLabel>
 					<InputGroup>
