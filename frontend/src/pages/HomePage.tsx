@@ -1,14 +1,15 @@
 import HomeIllustration from "../assets/Humaaans.png"
-import { Image, HStack, VStack, Button } from "@chakra-ui/react"
-import { useNavigate } from "react-router-dom"
+import { Image, HStack } from "@chakra-ui/react"
+import Navbar from "../components/Navbar"
 
 const HomePage = () => {
-	const navigate = useNavigate()
-
 	return (
-		<HStack>
-			<Image src={HomeIllustration} w={"500px"} h={"500px"} />
-		</HStack>
+		<>
+			<Navbar />
+			<HStack>
+				<Image src={HomeIllustration} w={"500px"} h={"500px"} />
+			</HStack>
+		</>
 	)
 }
 

@@ -1,13 +1,11 @@
 import { ColorModeSwitcher } from "../ColorModeSwitcher"
 import { Box, Flex, useColorModeValue, Text, Stack, Button } from "@chakra-ui/react"
 import "@fontsource/dancing-script/700.css"
-import "@fontsource/denk-one"
 import { useAuthContext } from "../hooks/useAuthContext"
 import { useNavigate } from "react-router-dom"
 import useSignOut from "../hooks/useSignOut"
 
 const logoFont = "'Dancing Script', cursive;"
-const userFont = "'Denk One', sans-serif;"
 
 const Navbar = () => {
 	const navigate = useNavigate()
@@ -45,12 +43,7 @@ const Navbar = () => {
 				<Stack justify={"flex-end"} direction={"row"} spacing={6}>
 					{user ? (
 						<>
-							<Text
-								color={useColorModeValue("gray.800", "white")}
-								fontFamily={userFont}
-							>
-								Welcome, {user.email}
-							</Text>
+							<Text color={useColorModeValue("gray.800", "white")}>Welcome</Text>
 							<Button
 								display={"inline-flex"}
 								fontSize={"sm"}

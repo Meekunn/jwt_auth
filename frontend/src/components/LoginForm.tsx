@@ -18,6 +18,7 @@ import {
 import { useRef, useState, useEffect } from "react"
 import { MdEmail, MdVisibility, MdVisibilityOff } from "react-icons/md"
 import { RiLockPasswordFill } from "react-icons/ri"
+import { useNavigate } from "react-router-dom"
 import useSignIn from "../hooks/useSignIn"
 import { loginFormStyle } from "./style"
 
@@ -26,6 +27,7 @@ const LoginForm = () => {
 	const borderColor = useColorModeValue("gray.900", "#0a1a30")
 	const inputRef = useRef<HTMLInputElement>(null)
 	const { signin, isLoading } = useSignIn()
+	const navigate = useNavigate()
 
 	useEffect(() => {
 		inputRef.current?.focus()
@@ -39,6 +41,7 @@ const LoginForm = () => {
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		await signin(email, password)
+		navigate("/dashboard")
 	}
 
 	return (

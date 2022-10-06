@@ -1,25 +1,23 @@
-// const jwt = require("jsonwebtoken");
-// const user = require("../models/userModel");
+const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
 
-// const requireAuth = async (req, res, next) => {
-// 	//is user authenticated?
-// 	const { authorization } = req.headers;
+const requireAuth = async (req, res, next) => {
+	//is user authenticated?
+	const token = req.cookies.jwt;
 
-// 	if (!authorization) {
-// 		return res
-// 			.status(401)
-// 			.json({ error: "Authorization token is required" });
-// 	}
-// 	const token = authorization.split(" ")[1];
+	if (!token) {
+		return res.status(401).json({ error: "Request is not authorized" });
+	}
 
-// 	try {
-// 		const { _id } = jwt.verify(token, process.env.SECRET);
-// 		req.user = await user.findOne({ _id }).select("_id");
-// 		next();
-// 	} catch (error) {
-// 		console.log(error);
-// 		res.status(401).json({ error: "Request is not authorized" });
-// 	}
-// };
+	const { _id } = jwt.verify(token, process.env.SECRET);
+	const user = await User.findOne({ _id }).select("_id");
+	if (!user) {
+		return res
+			.status(401)
+			.json({ error: "You are not authorized to view this page" });
+	}
+	req.user;
+	next();
+};
 
-// module.exports = requireAuth;
+module.exports = requireAuth;

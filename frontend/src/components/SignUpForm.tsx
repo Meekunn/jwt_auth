@@ -53,9 +53,7 @@ const SignUpForm = () => {
 		if (currentForm == null) return
 		await signup(data.email, data.password)
 		reset()
-		setTimeout(() => {
-			navigate("/signin")
-		}, 2000)
+		navigate("/dashboard")
 	})
 
 	return (
